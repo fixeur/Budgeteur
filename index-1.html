@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Budget — Debug</title>
+<style>
+body{font-family:sans-serif;padding:20px;background:#f0ede6;color:#0d0d0d}
+button{display:block;width:100%;padding:16px;margin:10px 0;font-size:16px;border:none;border-radius:10px;background:#0d0d0d;color:white;cursor:pointer}
+#log{margin-top:20px;padding:14px;background:white;border-radius:10px;font-size:13px;line-height:1.8;white-space:pre-wrap;min-height:100px}
+input{display:block;width:100%;padding:14px;margin:8px 0;font-size:16px;border:1.5px solid #ccc;border-radius:10px;background:#e8e4dc}
+</style>
+</head>
+<body>
+<h2>Storage Debug</h2>
+<input type="number" id="testAmt" placeholder="Enter amount (e.g. 25)">
+<button onclick="testSave()">Test Save</button>
+<button onclick="testLoad()">Test Load</button>
+<button onclick="testClear()">Clear all data</button>
+<div id="log">Tap a button to test...</div>
+
+<script>
+function log(msg) {
+  document.getElementById('log').textContent += '\n' + msg;
+}
+
+function testSave() {
+  try {
+    var amt = document.getElementById('testAmt').value;
+    log('Trying to save amount: ' + amt);
+    localStorage.setItem('test_amt', amt);
+    var check = localStorage.getItem('test_amt');
+    log('Saved and read back: ' + check);
+    log('localStorage is WORKING ✓');
+  } catch(e) {
+    log('ERROR: ' + e.message);
+    log('localStorage is BROKEN ✗');
+  }
+}
+
+function testLoad() {
+  try {
+    var val = localStorage.getItem('test_amt');
+    log('Loaded from storage: ' + val);
+    if (val === null) log('(nothing saved yet)');
+  } catch(e) {
+    log('ERROR loading: ' + e.message);
+  }
+}
+
+function testClear() {
+  try {
+    localStorage.clear();
+    log('Cleared all localStorage');
+  } catch(e) {
+    log('ERROR clearing: ' + e.message);
+  }
+}
+
+log('Page loaded. Browser: ' + navigator.userAgent.slice(0,80));
+try {
+  localStorage.setItem('ping','1');
+  localStorage.removeItem('ping');
+  log('localStorage: available ✓');
+} catch(e) {
+  log('localStorage: UNAVAILABLE - ' + e.message);
+}
+</script>
+</body>
+</html>
